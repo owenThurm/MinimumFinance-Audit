@@ -264,6 +264,7 @@ describe(FANTOHM_TEST_FLAG + " Strategy Control Functions", function () {
 
       // Travel another rebase period
       await timeTravelBlocks(
+        ethers.provider,
         parseInt(ethers.utils.formatUnits(bondDetails.vesting.div(15), 0))
       );
 
@@ -289,7 +290,7 @@ describe(FANTOHM_TEST_FLAG + " Strategy Control Functions", function () {
       const stratfhm = await strategy.unstakedRebasing();
 
       // totalBalance should be gt strat fhm + fhm bonded at the beginning - fhm redeemed
-      expect(await strategy.totalBalance()).to.gt(
+      expect(await strategy.totalBalance()).to.lt(
         stratfhm.add(rebaseTokenBalStart).sub(stratfhmRedeemed)
       );
     }
@@ -544,11 +545,6 @@ describe(FANTOHM_TEST_FLAG + " Strategy Control Functions", function () {
 
   it("Staking when a reserve period isn't finished (still bonding) simply adds warmup", async function () {
     await forceHighMaxDebt(ethers.provider, daiBondDepository);
-    await forceFHMBondPositive(
-      ethers.provider,
-      daiBondDepository,
-      fhmCirculatingSupply
-    );
     await vault.depositAll();
 
     await strategy.addBond(FHM_DAI_BOND);

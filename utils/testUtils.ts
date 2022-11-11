@@ -134,15 +134,15 @@ const getSuperWhale = async (
   const superWhale = await impersonateAddr(provider, superWhaleAddr);
   const stakedRebase = await getERC20At(token);
 
-  for (let i = 1; i < whales.length; i++) {
-    let whale = await impersonateAddr(provider, whales[i]);
-    let spaBal = await stakedRebase.balanceOf(whales[i]);
-    await stakedRebase.connect(whale).transfer(superWhaleAddr, spaBal);
-  }
-  if (!fundStaked) {
-    const superWhaleBal = await stakedRebase.balanceOf(superWhaleAddr);
-    stakeManager.connect(superWhale).unstake(superWhaleBal, true);
-  }
+  // for (let i = 1; i < whales.length; i++) {
+  //   let whale = await impersonateAddr(provider, whales[i]);
+  //   let spaBal = await stakedRebase.balanceOf(whales[i]);
+  //   await stakedRebase.connect(whale).transfer(superWhaleAddr, spaBal);
+  // }
+  // if (!fundStaked) {
+  //   const superWhaleBal = await stakedRebase.balanceOf(superWhaleAddr);
+  //   stakeManager.connect(superWhale).unstake(superWhaleBal, true);
+  // }
 
   return superWhale;
 };
@@ -173,10 +173,7 @@ const minimizeBondPeriod = async (provider, bond) => {
 };
 
 const timeTravelBlocks = async (provider, blocks) => {
-  // Notice hardhat does not yet support mining many blocks with a single call
-  // https://gitcoin.co/issue/nomiclabs/hardhat/1112
-  // https://github.com/nomiclabs/hardhat/pull/2032
-  for (let i = 0; i < blocks; i++) await provider.send("evm_mine");
+  await hre.network.provider.send("hardhat_mine", [`0x${blocks.toString(16)}`]);
 };
 
 const forceBondPrice = async (
@@ -223,7 +220,7 @@ const forceBondPositive = async (
   lpAddr = null
 ) =>
   await forceBondPrice(
-    (await strategy.rebaseTokenPriceInUSD(1e9)).mul(90).div(100), // 10% Discount
+    (await strategy.rebaseTokenPriceInUSD(1e9)).mul(99).div(100), // 10% Discount
     provider,
     bondDepository,
     strategy,
@@ -377,12 +374,17 @@ const getPawn = async (
 };
 
 const forceWarmupPeriod = async (provider, stakeManager, warmup) => {
-  const stakeManagerOwnerAddr = await stakeManager.manager();
-  const stakeManagerOwner = await impersonateAddr(
-    provider,
-    stakeManagerOwnerAddr
-  );
-  await stakeManager.connect(stakeManagerOwner).setWarmup(warmup);
+  // const [deployer] = await ethers.getSigners();
+  // const stakeManagerOwnerAddr = await stakeManager.manager();
+  // const stakeManagerOwner = await impersonateAddr(
+  //   provider,
+  //   stakeManagerOwnerAddr
+  // );
+  // await deployer.sendTransaction({
+  //   to: stakeManager.address,
+  //   value: ethers.utils.parseEther("1"),
+  // });
+  // await stakeManager.connect(stakeManagerOwner).setWarmup(warmup);
 };
 
 const beforeHook = async ({

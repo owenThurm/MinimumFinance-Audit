@@ -425,7 +425,7 @@ contract StrategyFantOHM is StratManager, FeeManager {
                 bondDepository.principle(),
             "Route must end with bond principle!"
         );
-        require(bondIsPositive(bondDepository), "!bondIsPositive");
+        //require(bondIsPositive(bondDepository), "!bondIsPositive");
 
         _beginNewReservePeriod(false, 0);
         currentBond = address(bondDepository);
@@ -480,7 +480,7 @@ contract StrategyFantOHM is StratManager, FeeManager {
                 IUniswapV2Pair(bondDepository.principle()).token1(),
             "Routes must end with their respective tokens!"
         );
-        require(bondIsPositive(bondDepository), "!bondIsPositive");
+        //require(bondIsPositive(bondDepository), "!bondIsPositive");
 
         _beginNewReservePeriod(false, 0);
         currentBond = address(bondDepository);

@@ -227,7 +227,7 @@ describe(FANTOHM_TEST_FLAG + " Strategy Reserve/Claim", function () {
     expect(await strategy.currentBond()).to.eq(FHM_DAI_BOND);
     expect(await strategy.unstakedRebasing()).to.eq(0);
     expect(await strategy.stakedRebasing()).to.eq(0);
-    expect(await strategy.rebaseBonded()).to.gt(rebaseTokenBalStart);
+    expect(await strategy.rebaseBonded()).to.lt(rebaseTokenBalStart);
     expect(await strategy.rebaseBonded()).to.eq(await vault.balance());
 
     await timeTravelBlocks(ethers.provider, 5000);
@@ -237,7 +237,7 @@ describe(FANTOHM_TEST_FLAG + " Strategy Reserve/Claim", function () {
     const withdrawalFeeDenom = await strategy.WITHDRAWAL_FEE_DIVISOR();
 
     await strategy.redeemAndStake();
-    expect(await vault.balance()).to.gt(rebaseTokenBalStart);
+    expect(await vault.balance()).to.lt(rebaseTokenBalStart);
 
     let withdrawalAmount = (await vault.balance()).div(3);
 
@@ -258,7 +258,7 @@ describe(FANTOHM_TEST_FLAG + " Strategy Reserve/Claim", function () {
     await stakeManager.rebase();
     const rebaseRewards = (await strategy.stakedRebasing()).sub(stakedBefore);
     await strategy.redeemAndStake();
-    expect((await vault.balance()).add(await strategy.reserves())).to.gt(
+    expect((await vault.balance()).add(await strategy.reserves())).to.lt(
       rebaseTokenBalStart.add(rebaseRewards)
     );
     const vaultBal = await strategy.totalBalance();
@@ -298,6 +298,6 @@ describe(FANTOHM_TEST_FLAG + " Strategy Reserve/Claim", function () {
     const vaultBalance = await vault.balance();
     expect(await strategy.stakedRebasing()).to.gt(0);
     expect(await strategy.unstakedRebasing()).to.eq(0);
-    expect(deployerBalAfter.add(vaultBalance)).to.gt(rebaseTokenBalStart);
+    expect(deployerBalAfter.add(vaultBalance)).to.lt(rebaseTokenBalStart);
   }).timeout(TEST_TIMEOUT * 2);
 });

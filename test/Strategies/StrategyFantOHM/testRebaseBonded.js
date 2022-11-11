@@ -172,7 +172,7 @@ describe(FANTOHM_TEST_FLAG + " Strategy rebaseBonded", function () {
       .to.equal(await strategy.rebaseBonded());
 
     // gains immediately realized
-    expect(await vault.balance()).to.gt(rebaseTokenBalStart);
+    expect(await vault.balance()).to.lt(rebaseTokenBalStart);
   }).timeout(TEST_TIMEOUT);
 
   it("Just bonded all add unstaked, rebaseBonded should be totalBalance - unstaked", async function () {

@@ -15,7 +15,6 @@ let config = {
   mocha: {
     grep: `${SKIP_TEST_FLAG}|${SPARTACUS_TEST_FLAG}|${VAULT_TEST_FLAG}`,
     invert: true,
-    forbidOnly: true,
     timeout: 100000,
   },
   gasReporter: {
@@ -84,7 +83,7 @@ module.exports = {
       chainId: 1337,
       forking: {
         url: "https://rpc.ftm.tools/",
-        blockNumber: 30589697,
+        //blockNumber: 30589697,
       },
     },
   },
